@@ -58,6 +58,13 @@ void Multiplicacion::SetMultiplicacion(vector<int> n1, vector<int> n2)
 void Multiplicacion::Conversion(vector<int> resultadoint)
 {
     /*-----------------INICIO-CONVERSION--------------------*/
+
+    for (auto i : resultadoint)
+    {
+        cout << i;
+    }
+    cout << endl;
+
     size_t t = resultadoint.size();
     resultado = new char[t + 3];
     int inicio = 0;

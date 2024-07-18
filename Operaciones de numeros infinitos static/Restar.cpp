@@ -28,11 +28,15 @@ Resta::Resta(vector<int> n1, vector<int> n2)
         bool es_decimal = n1[i] != -1 || n2[i] != -1;
         int resta = es_decimal ? n1[i] - n2[i] : -1;
 
-        if (resta < 0 && es_decimal)
+        if (resta < 0)
         {
-            resta = abs(resta);
-            if (n1.size() < i) n1[i + 1]--;
+            if (n1.size() != i || n2.size() != i && !es_decimal)
+            {
+                bool menor = n1[i] > n2[i] ? (n2[i + 1]--, n2[i] += 10) : (n1[i + 1]--, n1[i] += 10);
+                resta = n1[i] - n2[i];
+            }
         }
+
         resultadoint.push_back(resta);
     }
 
@@ -86,34 +90,50 @@ void Resta::Conversion(vector<int> resultadoint, bool negativo)
     /*----------------------INICIO RESTA----------------------------------*/
    /*Creamos las variables para iniciar la conversion de int a char*/
     size_t t = resultadoint.size();
-    resultado = new char[t + 2];
-    int inicio = 0;
+    resultado = new char[t];
+    char* temporal = new char[t + 1];
+    size_t termino = t;
     bool decimal = false;
-    //si el usuario puso numeros grandes y el resultado es negativo
-    //hacemos que el resultado se vea como negativo
-    if (negativo) 
-    {
-        resultado[0] = '-';
-        inicio++;
-    }
+    auto itl = resultadoint.rbegin();
 
     /*Iniciamos la conversion del resultado que usuario puso en la resta*/
-    for (size_t i = resultadoint.size() - 1; i > 0; i--)
+    for (size_t i = 0; i < t; i++)
     {
-        decimal = resultadoint[i] != -1;
-        if (resultadoint[i] != -1)
-            resultado[inicio] = static_cast<char>(resultadoint[i] + '0');
-        else
-            resultado[inicio] = '.';
-        inicio++;
+        decimal = *itl != -1;
+        temporal[i] = decimal ? static_cast<char>(*itl + '0') : '.';
+        ++itl;
+        
     }
 
-    for (size_t i = 0; i < t; i++) {
+    if (negativo)
+    {
+        strcpy(resultado,"-");
+        strcat(resultado, temporal);
+        termino += 1;
+    }
+    else
+    {
+        strcpy(resultado, temporal);
+    }
+
+    //si el usuario puso numeros grandes y el resultado es negativo
+    //hacemos que el resultado se vea como negativo
+    /*if (negativo)
+    {
+        char* aux = new char[t+2];
+        strcpy(aux, "-");
+        strcat(aux, resultado);
+        strcpy(resultado, aux);
+    }*/
+
+
+    /*for (size_t i = 0; i < t; i++) {
         if (resultado[i] - '0' >= 0)continue;
         else resultado[i] = NULL;
-    }
+    }*/
 
-    resultado[t] = '\0';
+
+    resultado[termino] = '\0';
     /*----------------------FIN RESTA----------------------------------*/
 }
 
